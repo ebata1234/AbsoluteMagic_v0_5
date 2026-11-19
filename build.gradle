@@ -1,0 +1,76 @@
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+}
+
+version = mod_version
+group = mod_group_id
+
+base {
+    archivesName = mod_id
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+minecraft {
+    mappings channel: mapping_channel, version: mapping_version
+    copyIdeResources = true
+    runs {
+        configureEach {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                "${mod_id}" {
+                    source sourceSets.main
+                }
+            }
+        }
+        client {
+        }
+        server {
+            args '--nogui'
+        }
+    }
+}
+
+repositories {
+    // Put the dependency jars into ./libs (keep the original file names).
+    flatDir {
+        dir 'libs'
+    }
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
+    // libs/irons_spellbooks-1.20.1-3.16.2.jar
+    compileOnly fg.deobf("local:irons_spellbooks:1.20.1-3.16.2")
+    // --- L2Hostility (for the "Magician" trait). Put these in ./libs (see README):
+    compileOnly fg.deobf("local:l2hostility:2.5.19")
+    compileOnly fg.deobf("local:l2library:2.5.3")
+    compileOnly fg.deobf("local:l2damagetracker:0.4.3")   // extracted from l2hostility jar (META-INF/jarjar)
+    compileOnly fg.deobf("local:l2serial:1.2.2")          // extracted from l2library jar (META-INF/jarjar)
+    compileOnly fg.deobf("local:Registrate-MC1.20:1.3.11") // extracted from l2library jar (META-INF/jarjar)
+    // libs/irons_lib-1.20.1-2.1.0.jar  (only if the compiler asks for it)
+    // compileOnly fg.deobf("local:irons_lib:1.20.1-2.1.0")
+}
+
+tasks.named('jar', Jar).configure {
+    manifest {
+        attributes([
+            'Specification-Title'     : mod_id,
+            'Specification-Vendor'    : mod_authors,
+            'Specification-Version'   : '1',
+            'Implementation-Title'    : project.name,
+            'Implementation-Version'  : project.jar.archiveVersion,
+            'Implementation-Vendor'   : mod_authors
+        ])
+    }
+    finalizedBy 'reobfJar'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}

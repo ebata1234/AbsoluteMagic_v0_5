@@ -1,0 +1,40 @@
+modLoader = "javafml"
+loaderVersion = "[47,)"
+license = "All Rights Reserved"
+
+[[mods]]
+modId = "absolutemagic"
+version = "0.5.0"
+displayName = "Absolute Magic"
+description = '''Adds "Fixed Strike", "Percent Strike" and "Time Bomb" spells for Iron's Spells 'n Spellbooks.
+Fixed / Percent Strike: while the buff is active, every tool hit / spell hit also deals a flat amount or a percentage of the target's HP as true damage that ignores armor, resistances and other damage buffs.
+Magician trait (L2Hostility): mobs with the trait cast Iron's Spells spells.
+Time Bomb: target a creature; after the fuse it explodes (no block damage). A player dies, a mob takes fixed damage. A bombed player who hits another player passes the bomb on.'''
+
+[[dependencies.absolutemagic]]
+modId = "forge"
+mandatory = true
+versionRange = "[47.4.0,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.absolutemagic]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.20.1,1.21)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.absolutemagic]]
+modId = "irons_spellbooks"
+mandatory = true
+versionRange = "[0,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.absolutemagic]]
+modId = "l2hostility"
+mandatory = true
+versionRange = "[2.5.19,)"
+ordering = "AFTER"
+side = "BOTH"
