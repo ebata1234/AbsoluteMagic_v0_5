@@ -1,0 +1,27 @@
+name: build
+on:
+  workflow_dispatch:
+  push:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Extract nested jars
+        run: |
+          cd libs
+          unzip -j -o l2hostility-2.5.19.jar 'META-INF/jarjar/l2damagetracker-*.jar'
+          unzip -j -o l2library-2.5.3.jar 'META-INF/jarjar/l2serial-*.jar' 'META-INF/jarjar/Registrate-*.jar'
+          ls -l
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.8
+      - run: gradle build --no-daemon
+      - uses: actions/upload-artifact@v4
+        with:
+          name: absolutemagic-jar
+          path: build/libs/*.jar
